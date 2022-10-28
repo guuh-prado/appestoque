@@ -1,72 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package appestoque.telas;
 
-import appestoque.dal.ModuloConexao;
+import appestoque.dal.UsersController;
 import java.sql.*;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Dev
- */
 public class RegisterFrame extends javax.swing.JFrame {
 
-    Connection conect;
-    PreparedStatement pst = null;
-    ResultSet rs = null;
-
-    /**
-     * Creates new form RegisterFrame
-     */
-    public void Register() {
-        String sql = "insert into User(fullName,login,pass,email,acess_type) values (?,?,?,?,?);";
-            String pass = new String(txtSenha.getText());
-            String confirmaPass = new String(txtConfirmaSenha.getText());
-            if (!confirmaPass.equals(pass)){
-                JOptionPane.showMessageDialog(null, "Senhas não coincidem.");
-            }else{
-            //pegando dados para validar no banco "?" é substituido pelas variaveis
-            try{
-            pst = conect.prepareStatement(sql);
-            pst.setString(1, txtNome.getText());
-            pst.setString(2, txtLogin.getText());
-            pst.setString(3, pass);
-            pst.setString(4, txtEmail.getText());
-            pst.setString(5, "1");
-            //executa a query
-            pst.executeUpdate();
-            
-
-            String select ="SELECT * FROM User WHERE login=? AND pass=?";
-            pst = conect.prepareStatement(select);
-            pst.setString(1, txtLogin.getText());
-            pst.setString(2, txtSenha.getText());
-            rs = pst.executeQuery();
-//validação user
-            if (rs.next()) {
-                JOptionPane.showMessageDialog(null, "Sucesso ao cadastrar");
-                LoginFrame login = new LoginFrame();
-                login.setVisible(true);
-                this.dispose();
-            } else {
-                JOptionPane.showMessageDialog(null, "Cadastro com erro");
-            }
-        } catch (Exception e) {
-                System.out.println(e.getMessage());
-            JOptionPane.showMessageDialog(null, "Erro ao cadastrar.");
-        }
-        }}
+    UsersController c1 = new UsersController();
 
     public RegisterFrame() {
         initComponents();
-                try {
-            conect = ModuloConexao.conector();
-        } catch (Exception e) {
-            System.out.println("ErroR: " + e.getMessage());
-        }
     }
 
     /**
@@ -91,7 +34,7 @@ public class RegisterFrame extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         bxAcessType = new javax.swing.JComboBox<>();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         btnSingUp.setText("Registre-Se");
         btnSingUp.addActionListener(new java.awt.event.ActionListener() {
@@ -175,8 +118,13 @@ public class RegisterFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSingUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSingUpActionPerformed
-        Register();
-            // TODO add your handling code here:
+        try {
+            c1.Register(this.txtNome.getText(), this.txtLogin.getText(), this.txtSenha.getText(), this.txtConfirmaSenha.getText(), this.txtEmail.getText());
+            this.dispose();
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
     }//GEN-LAST:event_btnSingUpActionPerformed
 
     private void bxAcessTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bxAcessTypeActionPerformed
