@@ -12,6 +12,5 @@ public class Appestoque {
     public static void main(String[] args) {
         LoginFrame teste = new LoginFrame();
         teste.setVisible(true);
-        System.out.println("Hello World!");
     }
 }
